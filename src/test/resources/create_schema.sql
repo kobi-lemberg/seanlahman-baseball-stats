@@ -1,0 +1,48 @@
+CREATE TABLE IF NOT EXISTS `Teams` (
+    `yearID` int DEFAULT NULL,
+    `teamID` varchar(255) DEFAULT NULL,
+    `Rank` int DEFAULT NULL,
+    `AB` int DEFAULT NULL
+) DEFAULT CHARSET UTF8MB4;
+--
+CREATE TABLE IF NOT EXISTS `Salaries` (
+    `yearID` int DEFAULT NULL,
+    `teamID` varchar(255) DEFAULT NULL,
+    `playerID` varchar(255) DEFAULT NULL,
+    `salary` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET UTF8MB4;
+--
+CREATE TABLE IF NOT EXISTS `Pitching` (
+    `playerID` varchar(255) DEFAULT NULL,
+    `yearID` int DEFAULT NULL,
+    `teamID` varchar(255) DEFAULT NULL,
+    `W` int DEFAULT NULL,
+    `L` int DEFAULT NULL,
+    `G` int DEFAULT NULL,
+    `ERA` float DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET UTF8MB4;
+--
+CREATE TABLE IF NOT EXISTS `PitchingPost` (
+    `playerID` varchar(255) DEFAULT NULL,
+    `yearID` int DEFAULT NULL,
+    `teamID` varchar(255) DEFAULT NULL,
+    `W` int DEFAULT NULL,
+    `L` int DEFAULT NULL,
+    `G` int DEFAULT NULL,
+    `ERA` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET UTF8MB4;
+--
+CREATE TABLE IF NOT EXISTS `Fielding` (
+    `playerID` varchar(255) DEFAULT NULL,
+    `yearID` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET UTF8MB4;
+--
+CREATE TABLE IF NOT EXISTS `AllstarFull` (
+    `playerID` varchar(255) DEFAULT NULL,
+    `GP` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET UTF8MB4;
+--
+CREATE TABLE IF NOT EXISTS `HallOfFame` (
+    `playerID` varchar(255) DEFAULT NULL,
+    `yearid` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET UTF8MB4;

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration >
+<!-- Taken from: https://logging.apache.org/log4j/log4j-2.0/manual/migration.html -->
+<appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="FILE"/>
+    <appender-ref ref="CONSOLE"/>
+<!--    <appender-ref ref="GELF"/>-->
+</appender>
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yy/MM/dd HH:mm:ss} %c %p : %m%n"/>
+        </layout>
+    </appender>
+<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+    <param name="Threshold" value="INFO" />
+    <param name="File" value="dime.log"/>
+    <param name="MaxFileSize" value="300MB"/>
+    <!-- <layout class="net.logstash.log4j.JSONEventLayoutV1" /> -->
+    <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="%d{yy/MM/dd HH:mm:ss} %c %p : %m%n"/>
+    </layout>
+</appender>
+
+<root>
+<priority value="info"/>
+<appender-ref ref="ASYNC"/>
+</root>
+</log4j:configuration>
+
