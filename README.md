@@ -7,15 +7,20 @@ Simple Spark ETL code over Sean Lahman's baseball database
    - There is a docker compose under mysql directory, see [instructions](mysql/MySQL_Docker.md)
 
 ## Instructions to run pre compiled code
-1. unzip the attached ```seanlahman-baseball-stats-0.1.0-SNAPSHOT.zip``` file
+1. unzip the attached ```seanlahman-baseball-stats-0.1.0-SNAPSHOT.zip``` file (it's too large to be attached here)
 2. run the following command
    ```shell
     cd seanlahman-baseball-stats-0.1.0-SNAPSHOT
-    ./bin/seanlahman-baseball-stats -Dconfig.file=conf/application.conf -Dlemberg.kobi.slbs.stats.output-dir="/tmp/kuku"
+    ./bin/seanlahman-baseball-stats -Dconfig.file=conf/application.conf \
+    -Dlemberg.kobi.slbs.stats.output-dir="/tmp/kuku"
     ```
 3. /tmp/kuku is the output directory, you can change it to any directory you want
 4. conf/application.conf is the configuration file
    1. you can modify parameters within the file or via JAVA OPTS (-D) (i.e spark master can be changed) 
+
+## View the output
+1. the output is a CSV file, under the output directory, there will be a directory for each question
+2. I used the native writer, which can be integrated with any Hadoop compatible system (i.e HDFS, S3, etc)
 
 ## Instructions to run the code via IDEA/Recompile
 1. you need SBT to compile the code

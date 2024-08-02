@@ -40,6 +40,7 @@ class SeanLahamanBaseballStatsSpec extends AnyFunSpec
     insert("truncate Pitching")()
     insert("truncate Fielding")()
     insert("truncate Salaries")()
+    insert("truncate AllstarFull")()
 
   }
 
@@ -105,6 +106,36 @@ class SeanLahamanBaseballStatsSpec extends AnyFunSpec
       ).count()
 
       res shouldBe 0
+    }
+
+    it("should be able to answer question 2") {
+      insert(
+        """
+          |INSERT INTO AllstarFull (playerID, GP) VALUES ('a', 1), ('a', 1), ('b', 1);
+          |""".stripMargin) { _ shouldBe 3}
+
+      insert(
+        """
+          |INSERT INTO HallOfFame (playerID, yearid) VALUES ('a', 1999), ('a', 2000), ('b', 2000);
+          |""".stripMargin) { _ shouldBe 3}
+
+      insert("""
+               |INSERT INTO Pitching (playerID, yearID, teamID, W, L, G, ERA) VALUES
+               |                       ('a',    2000,  'team1', 10, 1, 20, 2.0),
+               |                       ('b',    2000,  'team1', 10, 1, 20, 2.0),
+               |                       ('a',    1999,  'team1', 10, 1, 20, 2.0),
+               |                       ('b',    1999,  'team1', 10, 1, 20, 2.0);
+               |""".stripMargin) { _ shouldBe 4}
+
+      val fields = Seq("Player", "ERA", "All Star Appearances", "Hall of Fame Induction Year")
+      val results = runner.answeQ2(pitchers = runner.readTable("Pitching")).join(
+        Seq(
+          ("b", 2.0f, 1, 2000),
+          ("a", 2.0f, 2, 1999)
+        ).toDF(fields: _*), fields, "left_anti"
+      ).collect()
+
+      results.length shouldBe 0
     }
 
   }

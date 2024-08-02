@@ -111,25 +111,24 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
   def readTable(tableName: String) = sparkSession.read.jdbc(url = jdbcUrl, table = tableName, properties = properties)
 
   def run(): Unit = {
-    /***
-     * Note; the repartition to 1 was meant to ensure we will get a single file (this is how I understand it)
-     * I'm relaying on the native Hadoop writer, thus, I'm using sub folders
-     *  -> we can do collect and than use boto to write to S3 to the same directory
-     */
+
     val outputDir = config.getString("lemberg.kobi.slbs.stats.output-dir")
     val pitchers = readTable("Pitching").select("playerID", "yearID", "ERA", "W", "L").cache()
 
-    val firstAnswer = answerQ1(pitchers = pitchers)
-    firstAnswer.repartition(1).write.mode("overwrite").option("header","true").csv(s"$outputDir/1")
+    Seq(
+      answerQ1(pitchers),
+      answeQ2(pitchers),
+      answerQ3(pitchers),
+      answerQ4
+    ).zipWithIndex.foreach { case (df, i) =>
+      /***
+       * Note; the repartition to 1 was meant to ensure we will get a single file (this is how I understand it)
+       * I'm relaying on the native Hadoop writer, thus, I'm using sub folders
+       *  -> we can do collect and than use boto to write to S3 to the same directory
+       */
+      df.repartition(1).write.mode("overwrite").option("header", "true").csv(s"$outputDir/${i + 1}")
+    }
 
-    val secondAnswer = answeQ2(pitchers = pitchers)
-    secondAnswer.repartition(1).write.mode("overwrite").option("header","true").csv(s"$outputDir/2")
-
-    val thirdAnswer = answerQ3(pitchers = pitchers)
-    thirdAnswer.repartition(1).write.mode("overwrite").option("header","true").csv(s"$outputDir/3")
-
-    val fourthAnswer = answerQ4
-    fourthAnswer.repartition(1).write.mode("overwrite").option("header","true").csv(s"$outputDir/4")
   }
 
 }
