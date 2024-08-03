@@ -35,3 +35,9 @@ Keep in mind that the tests are using Docker
 ```shell
 sbt test
 ``` 
+
+## CICD
+CI is running inside Github Actions, you can see the workflow [here](.github/workflows/ci.yml)
+
+## Monitoring
+Spark UI is available in port 4040, you can see the progress of the job there

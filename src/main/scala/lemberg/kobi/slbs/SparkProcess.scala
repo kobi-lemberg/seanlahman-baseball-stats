@@ -4,7 +4,7 @@ import com.typesafe.config.{Config, ConfigValue}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 trait SparkProcess {
 

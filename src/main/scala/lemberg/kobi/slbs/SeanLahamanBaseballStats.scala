@@ -32,8 +32,6 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
     //The assumption is that we would like inner join
     pitchersYearlySalary.join(infieldersYearlySalary, Seq("yearID"), "inner").orderBy(desc("yearID"))
       .withColumnRenamed("yearID", "Year").select("Year", "Fielding", "Pitching")
-
-
   }
 
   def answeQ2(pitchers: DataFrame): DataFrame = {
@@ -86,9 +84,8 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
     ).select(
         col("yearID").as("Year"),
         col("playerID").as("Player"),
-        col("Regular Season ERA"), col("Regular Season Win/Loss"), col("Post-season ERA"), col("Post-season Win/Loss"))
-      .limit(10)
-
+        col("Regular Season ERA"), col("Regular Season Win/Loss"), col("Post-season ERA"), col("Post-season Win/Loss")
+      ).limit(10)
   }
 
   private def answerQ4 = {
