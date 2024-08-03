@@ -1,4 +1,6 @@
 # seanlahman-baseball-stats
+[![Continuous Integration](https://github.com/kobi-lemberg/seanlahman-baseball-stats/actions/workflows/ci.yml/badge.svg)](https://github.com/kobi-lemberg/seanlahman-baseball-stats/actions/workflows/ci.yml)
+
 Simple Spark ETL code over Sean Lahman's baseball database
 
 ## Infra dependencies to run locally
