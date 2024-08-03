@@ -16,7 +16,6 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
     prop.put("password", config.getString("lemberg.kobi.slbs.mysql.password"))
     prop
   }
-
   private val jdbcUrl = config.getString("lemberg.kobi.slbs.mysql.jdbc-url")
 
   def answerQ1(pitchers: DataFrame): DataFrame = {
@@ -34,7 +33,7 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
       .withColumnRenamed("yearID", "Year").select("Year", "Fielding", "Pitching")
   }
 
-  def answeQ2(pitchers: DataFrame): DataFrame = {
+  def answerQ2(pitchers: DataFrame): DataFrame = {
     val allStarts = readTable("AllstarFull").select("playerID", "GP")
     val hallOfFame = readTable("HallOfFame").select("playerID", "yearid")
     val allStartsAppearances = allStarts.where("GP > 0").groupBy("playerID").count().withColumnRenamed("count", "All Star Appearances")
@@ -88,7 +87,7 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
       ).limit(10)
   }
 
-  private def answerQ4 = {
+  def answerQ4: DataFrame = {
     val teams = readTable("Teams").select(
       col("yearID").as("Year"),
       col("teamID").as("Team ID"),
@@ -108,16 +107,10 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
   def readTable(tableName: String) = sparkSession.read.jdbc(url = jdbcUrl, table = tableName, properties = properties)
 
   def run(): Unit = {
-
     val outputDir = config.getString("lemberg.kobi.slbs.stats.output-dir")
     val pitchers = readTable("Pitching").select("playerID", "yearID", "ERA", "W", "L").cache()
 
-    Seq(
-      answerQ1(pitchers),
-      answeQ2(pitchers),
-      answerQ3(pitchers),
-      answerQ4
-    ).zipWithIndex.foreach { case (df, i) =>
+    Seq(answerQ1(pitchers), answerQ2(pitchers), answerQ3(pitchers), answerQ4).zipWithIndex.foreach { case (df, i) =>
       /***
        * Note; the repartition to 1 was meant to ensure we will get a single file (this is how I understand it)
        * I'm relaying on the native Hadoop writer, thus, I'm using sub folders
@@ -125,7 +118,6 @@ class SeanLahamanBaseballStats(config: Config, sparkSession: SparkSession) {
        */
       df.repartition(1).write.mode("overwrite").option("header", "true").csv(s"$outputDir/${i + 1}")
     }
-
   }
 
 }
